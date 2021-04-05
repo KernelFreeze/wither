@@ -338,7 +338,7 @@ where
 async fn get_current_indexes(db: &Database, coll: &Collection) -> Result<HashMap<String, IndexModel>> {
     let list_indexes = match db.run_command(doc! {"listIndexes": coll.name()}, None).await {
         Ok(list_indexes) => list_indexes,
-        Err(err) => match err.kind.as_ref() {
+        Err(err) => match err.kind {
             // The DB & or collection does not yet exist. Move on.
             mongodb::error::ErrorKind::CommandError(err) if err.code == 26 => doc! {},
             _ => return Err(err.into()),
